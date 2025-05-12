@@ -1,0 +1,23 @@
+{
+  "campaigns": {
+    "Waterdeep": {
+      "discord_handle1": "player_name1",
+      "discord_handle2": "player_name2",
+      "discord_handleN": "player_nameN",
+      "discord_handle_dm": "dm_name",
+    },
+    "Candlekeep": {
+      "discord_handle1": "player_name1",
+      "discord_handle2": "player_name2",
+      "discord_handleN": "player_nameN",
+      "discord_handle_dm": "dm_name",
+    },
+    "Icewind Dale": {
+      "discord_handle1": "player_name1",
+      "discord_handle2": "player_name2",
+      "discord_handleN": "player_nameN",
+      "discord_handle_dm": "dm_name",
+    }
+  },
+    "whisperx_model": "large-v3"
+}
