@@ -92,7 +92,7 @@ To change it: edit `output_root=` in the `.bat` script.
 
 Edit terms in `glossary_config.json` directly or modify `glossary_config_wide.xlsx`.
 
-- Replace section: maps incorrect → correct
+- Replace section: maps `"Correct_Words": ["Words", "to", "replace", "automatically"]`
 - Ignore list: words skipped during spellchecking (e.g., D&D names)
 
 Use these scripts:
