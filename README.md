@@ -36,7 +36,7 @@ A drag-and-drop audio transcription pipeline using [WhisperX](https://github.com
    - Renames files
    - Runs WhisperX
    - Applies glossary corrections
-   - Outputs results in `/whisperx_output/`
+   - Outputs results in `/Transcripts/`
 
 ---
 
@@ -50,17 +50,17 @@ Edit `config.json` to map filenames to speaker names for each campaign:
 {
   "campaigns": {
     "Waterdeep": {
-      "dbuke": "Tinkler"
+      "discordhandle": "Character_Name"
     },
     "Candlekeep": {
-      "dbuke": "Lumpy"
+      "discordhandle": "Character_Name"
     }
   },
   "whisperx_model": "large-v3"
 }
 ```
 
-💡 Filenames must match: `123-dbuke_0.flac` → "Tinkler"  
+💡 Filenames must match: `123-discordhandle_0.flac` → "Character_Name"  
 Add new campaigns or characters freely—just watch out for trailing commas!
 
 ### 🎨 Speaker Colors
@@ -75,7 +75,7 @@ SPEAKER_COLORS = [
 
 ### 📂 Output Directory
 
-Default output: `[AudioFolder]/whisperx_output/`  
+Default output: `[AudioFolder]/Transcripts/`  
 To change it: edit `output_root=` in the `.bat` script.
 
 ---
@@ -152,19 +152,5 @@ Final `.md` files are compatible with Obsidian and include:
 
 - YAML frontmatter (Campaign, Session Date, Players)
 - Auto-tag line (e.g., `#transcript #Waterdeep #session/2025-05-01`)
-
----
-
-## 🧾 License & Credits
-
-Built using [WhisperX](https://github.com/m-bain/whisperx).  
-Local enhancements by Brian Buchanan & contributors.  
-No license file included—assume personal/internal use only unless stated otherwise.
-
----
-
-## 📣 Contributions
-
-Feel free to fork, improve, or request features!
 
 ---
