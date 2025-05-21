@@ -29,33 +29,6 @@ A drag-and-drop audio transcription pipeline using [WhisperX](https://github.com
 - Python (inside same Conda environment)
 - HuggingFace token (optional, add to `batch_transcribe.bat`)
 
-### 📁 Folder Structure
-
-Unzip to a directory like `C:\TranscriptionSystem`. Structure should look like:
-
-```
-TranscriptionSystem/
-├─ Transcripts/
-│  ├─ 1 - Create Transcripts.bat
-│  ├─ 2 - Export Glossary.bat
-│  ├─ 3 - Import Glossary Changes.bat
-│  ├─ import_glossary_from_excel.py
-│  ├─ export_glossary_to_excel.py
-│  ├─ convert_json_to_tsv.py
-│  ├─ combine_tsvs_with_colors.py
-│  ├─ process_transcript.py
-│  ├─ add_yaml_header.py
-│  ├─ detect_campaign.py
-│  ├─ rename_files.py
-│  ├─ config.json
-│  ├─ glossary_config.json
-│  ├─ glossary_config_wide.xlsx
-│  ├─ ignore_list.txt
-│  ├─ glossary_suggestions.json
-├─ whisperx_output/
-└─ README.md
-```
-
 ### 🏃‍♂️ How to Use
 
 1. **Drag and drop** a folder of `.flac` files onto `1 - Create Transcripts.bat`
@@ -63,7 +36,7 @@ TranscriptionSystem/
    - Renames files
    - Runs WhisperX
    - Applies glossary corrections
-   - Outputs results in `/whisperx_output/`
+   - Outputs results in `/Transcripts/`
 
 ---
 
@@ -77,17 +50,17 @@ Edit `config.json` to map filenames to speaker names for each campaign:
 {
   "campaigns": {
     "Waterdeep": {
-      "dbuke": "Tinkler"
+      "discordhandle": "Character_Name"
     },
     "Candlekeep": {
-      "dbuke": "Lumpy"
+      "discordhandle": "Character_Name"
     }
   },
   "whisperx_model": "large-v3"
 }
 ```
 
-💡 Filenames must match: `123-dbuke_0.flac` → "Tinkler"  
+💡 Filenames must match: `123-discordhandle_0.flac` → "Character_Name"  
 Add new campaigns or characters freely—just watch out for trailing commas!
 
 ### 🎨 Speaker Colors
@@ -102,7 +75,7 @@ SPEAKER_COLORS = [
 
 ### 📂 Output Directory
 
-Default output: `[AudioFolder]/whisperx_output/`  
+Default output: `[AudioFolder]/Transcripts/`  
 To change it: edit `output_root=` in the `.bat` script.
 
 ---
@@ -179,19 +152,5 @@ Final `.md` files are compatible with Obsidian and include:
 
 - YAML frontmatter (Campaign, Session Date, Players)
 - Auto-tag line (e.g., `#transcript #Waterdeep #session/2025-05-01`)
-
----
-
-## 🧾 License & Credits
-
-Built using [WhisperX](https://github.com/m-bain/whisperx).  
-Local enhancements by Brian Buchanan & contributors.  
-No license file included—assume personal/internal use only unless stated otherwise.
-
----
-
-## 📣 Contributions
-
-Feel free to fork, improve, or request features!
 
 ---
