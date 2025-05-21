@@ -58,7 +58,7 @@ for /f "tokens=2 delims=:," %%A in ('findstr /i "whisperx_model" "%CONFIG_FILE%"
 set "WHISPERX_MODEL=%WHISPERX_MODEL:~1,-1%"  :: Trim quotes
 
 :: HuggingFace token (if needed) - Put your token (hf_xxxxxxx) after the = sign below
-set HUGGING_FACE_HUB_TOKEN=
+set HUGGING_FACE_HUB_TOKEN=_____________________________
 
 :: ================================
 :: CHECKING FOLDER AND CAMPAIGN
