@@ -24,10 +24,16 @@ A drag-and-drop audio transcription pipeline using [WhisperX](https://github.com
 
 ### ✅ Requirements
 
-- Windows
-- [WhisperX](https://github.com/m-bain/whisperx) installed in a Conda environment
-- Python (inside same Conda environment)
-- HuggingFace token (optional, add to `batch_transcribe.bat`)
+- [WhisperX](https://github.com/m-bain/whisperx) installed in a Conda environment  
+  > 🧠 WhisperX is a fast and accurate speech-to-text model with word-level timestamps.  
+  > 📘 [See full WhisperX setup guide](https://github.com/anotheregostar/DNDTranscription/blob/main/WhisperX_Setup_Guide.md)  
+- Python available inside the same Conda environment  
+  > 🐍 Includes libraries for transcription, spellchecking, fuzzy matching, Excel output, and glossary support.  
+  > 📘 [Full Python dependency install guide](https://github.com/anotheregostar/DNDTranscription/blob/main/Transcription_Python_Setup.md)  
+- HuggingFace token (optional, add to `batch_transcribe.bat`)  
+- **Input audio**: `.flac` files recorded per speaker  
+  > 📡 I recommend using the [Craig Discord bot](https://craig.chat/) to record sessions with separate audio tracks for each speaker.  
+  > 📘 [Craig Bot Instructions](https://github.com/anotheregostar/DNDTranscription/blob/main/CraigBot_Instructions.md)
 
 ### 🏃‍♂️ How to Use
 
@@ -86,7 +92,7 @@ To change it: edit `output_root=` in the `.bat` script.
 
 Edit terms in `glossary_config.json` directly or modify `glossary_config_wide.xlsx`.
 
-- Replace section: maps incorrect → correct
+- Replace section: maps `"Correct_Words": ["Words", "to", "replace", "automatically"]`
 - Ignore list: words skipped during spellchecking (e.g., D&D names)
 
 Use these scripts:
