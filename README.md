@@ -29,33 +29,6 @@ A drag-and-drop audio transcription pipeline using [WhisperX](https://github.com
 - Python (inside same Conda environment)
 - HuggingFace token (optional, add to `batch_transcribe.bat`)
 
-### 📁 Folder Structure
-
-Unzip to a directory like `C:\TranscriptionSystem`. Structure should look like:
-
-```
-TranscriptionSystem/
-├─ Transcripts/
-│  ├─ 1 - Create Transcripts.bat
-│  ├─ 2 - Export Glossary.bat
-│  ├─ 3 - Import Glossary Changes.bat
-│  ├─ import_glossary_from_excel.py
-│  ├─ export_glossary_to_excel.py
-│  ├─ convert_json_to_tsv.py
-│  ├─ combine_tsvs_with_colors.py
-│  ├─ process_transcript.py
-│  ├─ add_yaml_header.py
-│  ├─ detect_campaign.py
-│  ├─ rename_files.py
-│  ├─ config.json
-│  ├─ glossary_config.json
-│  ├─ glossary_config_wide.xlsx
-│  ├─ ignore_list.txt
-│  ├─ glossary_suggestions.json
-├─ whisperx_output/
-└─ README.md
-```
-
 ### 🏃‍♂️ How to Use
 
 1. **Drag and drop** a folder of `.flac` files onto `1 - Create Transcripts.bat`
