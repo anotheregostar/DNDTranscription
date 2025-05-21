@@ -17,7 +17,7 @@ This guide walks you through how to use the [Craig Discord bot](https://craig.ch
 To start a recording, enter this in any text channel:
 
 ```
-:craig:, join
+/join
 ```
 
 Craig will join the **voice channel you're in** and begin recording.
@@ -29,7 +29,7 @@ Craig will join the **voice channel you're in** and begin recording.
 To stop the recording and have Craig leave:
 
 ```
-:craig:, leave
+/leave
 ```
 
 Craig will DM you (or the server owner) a link to download the recordings.
@@ -50,15 +50,15 @@ This will give you a `.zip` file containing one `.flac` file per speaker.
 
 ## 📁 Preparing Files for Transcription
 
-1. Unzip the Craig `.zip` into a folder (e.g., `Session_2025-05-21`)
-2. Rename each file to follow this format:
+1. Unzip the Craig `.zip` into a folder with this structure: `Campaign_Name YYYY-MM-DD` - (eg. "Candlekeep 2025-05-17")
+2. Ensure that each file follows this format:
    ```
-   001-handle_0.flac
-   002-handle_0.flac
+   1-handle_0.flac
+   2-handle_0.flac
    ...
    ```
-   - Replace `handle` with the Discord username (or the config mapping key)
-   - Keep numbers sequential
+   - The `handle` portion of the file name should match up with the player's Discord username (or the config mapping key)
+   - Make sure that the numbers are sequential
 
 > 💡 Optional: Use the included `rename_files.py` to auto-rename if mapped in `config.json`.
 
@@ -66,7 +66,7 @@ This will give you a `.zip` file containing one `.flac` file per speaker.
 
 ## 🔁 Then What?
 
-Drag your folder of `.flac` files onto `1 - Create Transcripts.bat` to start the full WhisperX transcription pipeline.
+Drag your folder of `.flac` files (`Campaign_Name YYYY-MM-DD`) onto `1 - Create Transcripts.bat` to start the full WhisperX transcription pipeline.
 
 ---
 
