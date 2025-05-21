@@ -1,25 +1,25 @@
 {
   "campaigns": {
     "Waterdeep": {
-      "benasmaelwys": "Jake",
-      "brynmorstonefist": "Saman",
-      "cyrnakdatsarb": "Pip",
-      "anotheregostar": "Cote",
-      "dbuke": "Tinkler"
+      "discordhandle1": "Jake",
+      "discordhandle2": "Saman",
+      "discordhandle3": "Pip",
+      "discordhandle4": "Cote",
+      "discordhandle5": "Tinkler"
     },
     "Candlekeep": {
-      "benasmaelwys": "Jake",
-      "brynmorstonefist": "Old Tsu",
-      "cyrnakdatsarb": "Carric",
-      "anotheregostar": "Traveller",
-      "dbuke": "Lumpy"
+      "discordhandle1": "Jake",
+      "discordhandle2": "Old Tsu",
+      "discordhandle3": "Carric",
+      "discordhandle4": "Traveller",
+      "discordhandle5": "Lumpy"
     },
     "Icewind Dale": {
-      "benasmaelwys": "Jake",
-      "brynmorstonefist": "Glorin",
-      "cyrnakdatsarb": "Theren",
-      "anotheregostar": "Rivaan",
-      "dbuke": "Bork"
+      "discordhandle1": "Jake",
+      "discordhandle2": "Glorin",
+      "discordhandle3": "Theren",
+      "discordhandle4": "Rivaan",
+      "discordhandle5": "Bork"
     }
   },
     "whisperx_model": "large-v3"
