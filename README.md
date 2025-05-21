@@ -1,157 +1,197 @@
-#### **Description**
-This system lets you **drag and drop** a folder full of .flac files and automatically:
+# 🎙️ WhisperX Transcription Automation Suite
 
-- Rename audio files based on Campaign + Speaker
-- Transcribe using WhisperX
-- Create individual .tsv files (timestamped speech chunks)
-- Combine into:
-	- A **color-coded Excel** transcript
-	- A **plain Text** version
-
-All output goes to a neat `/whisperx_output/` folder.
+A drag-and-drop audio transcription pipeline using [WhisperX](https://github.com/m-bain/whisperx), enriched with campaign mapping, timestamped TSVs, color-coded Excel files, spell-checking, glossary-based corrections, anomaly detection, and Markdown exports for Obsidian compatibility.
 
 ---
-#### **Quick Start**
 
-##### **1. Requirements**
+## 📦 Features
+
+- **Drag and drop audio transcription** (.flac)
+- Automatically renames files by campaign + speaker
+- Uses **WhisperX** for precise transcription
+- Outputs:
+  - Individual `.tsv` files (timestamped speech)
+  - A **color-coded Excel** master transcript
+  - A clean **chat-style .txt** and **.md** transcript with YAML frontmatter
+- **Glossary-based correction** and typo fixing
+- **Anomaly detection** with suggestions
+- Campaign/player configuration system
+- Export/import glossary with Excel integration
+
+---
+
+## 🚀 Quick Start
+
+### ✅ Requirements
 
 - Windows
-- WhisperX installed inside a Conda environment
-- Python available inside that same environment
-- HuggingFace token if required (edit `batch_transcribe.bat`)
+- [WhisperX](https://github.com/m-bain/whisperx) installed in a Conda environment
+- Python (inside same Conda environment)
+- HuggingFace token (optional, add to `batch_transcribe.bat`)
 
-##### **2. Installation**
+### 📁 Folder Structure
 
-- Unzip everything into a folder, e.g., `C:\TranscriptionSystem`
-- Make sure the structure looks like:
+Unzip to a directory like `C:\TranscriptionSystem`. Structure should look like:
 
-```TranscriptionSystem/
-├─ batch_transcribe.bat
-├─ convert_json_to_tsv.py
-├─ combine_tsvs_with_colors.py
-├─ config.json
-├─ colors.png
-├─ README.txt
-└─ whisperx_output/   (empty to start)
 ```
-##### **3. Running It**
+TranscriptionSystem/
+├─ Transcripts/
+│  ├─ 1 - Create Transcripts.bat
+│  ├─ 2 - Export Glossary.bat
+│  ├─ 3 - Import Glossary Changes.bat
+│  ├─ import_glossary_from_excel.py
+│  ├─ export_glossary_to_excel.py
+│  ├─ convert_json_to_tsv.py
+│  ├─ combine_tsvs_with_colors.py
+│  ├─ process_transcript.py
+│  ├─ add_yaml_header.py
+│  ├─ detect_campaign.py
+│  ├─ rename_files.py
+│  ├─ config.json
+│  ├─ glossary_config.json
+│  ├─ glossary_config_wide.xlsx
+│  ├─ ignore_list.txt
+│  ├─ glossary_suggestions.json
+├─ whisperx_output/
+└─ README.md
+```
 
-- Drag and drop a folder full of .flac files onto batch_transcribe.bat
-- Wait for it to finish.
-- Find results inside /whisperx_output/
+### 🏃‍♂️ How to Use
+
+1. **Drag and drop** a folder of `.flac` files onto `1 - Create Transcripts.bat`
+2. Sit back and wait — the script:
+   - Renames files
+   - Runs WhisperX
+   - Applies glossary corrections
+   - Outputs results in `/whisperx_output/`
 
 ---
 
-#### **Customization**
+## 🛠 Customization
 
----
+### 🎭 Campaigns & Characters
 
-##### **Add or Update Campaigns / Players**
+Edit `config.json` to map filenames to speaker names for each campaign:
 
-Open `config.json` and edit:
-
-```
+```json
 {
-
-  "Waterdeep": {
-
-    "benasmaelwys": "Jake",
-
-    "brynmorstonefist": "Saman",
-
-    "cyrnakdatsarb": "Pip",
-
-    "anotheregostar": "Cote",
-
-    "dbuke": "Tinkler"
-
-  },
-
-  "Candlekeep": {
-
-    "benasmaelwys": "Jake",
-
-    "brynmorstonefist": "Old Tsu",
-
-    "cyrnakdatsarb": "Carric",
-
-    "anotheregostar": "Traveller",
-
-    "dbuke": "Lumpy"
-
-  }
-
+  "campaigns": {
+    "Waterdeep": {
+      "dbuke": "Tinkler"
+    },
+    "Candlekeep": {
+      "dbuke": "Lumpy"
+    }
+  },
+  "whisperx_model": "large-v3"
 }
 ```
 
-##### **Add new campaigns**:  
-Just add a new top-level section, e.g.:
+💡 Filenames must match: `123-dbuke_0.flac` → "Tinkler"  
+Add new campaigns or characters freely—just watch out for trailing commas!
 
+### 🎨 Speaker Colors
+
+Customize `combine_tsvs_with_colors.py` to change speaker color palette:
+
+```python
+SPEAKER_COLORS = [
+  "FFFFCC", "CCFFCC", "CCE5FF", "FFCCCC", ...
+]
 ```
-"Icewind Dale": {
 
-  "newhandle": "New Character"
+### 📂 Output Directory
 
-}
+Default output: `[AudioFolder]/whisperx_output/`  
+To change it: edit `output_root=` in the `.bat` script.
+
+---
+
+## ✨ Glossary System
+
+### 📋 Edit Glossary
+
+Edit terms in `glossary_config.json` directly or modify `glossary_config_wide.xlsx`.
+
+- Replace section: maps incorrect → correct
+- Ignore list: words skipped during spellchecking (e.g., D&D names)
+
+Use these scripts:
+
+- `export_glossary_to_excel.py glossary_config.json`
+- `import_glossary_from_excel.py glossary_config_wide.xlsx ignore_list.txt`
+
+### 📌 Anomalies & Suggestions
+
+During processing, unknown or suspicious words are:
+
+- Flagged and counted
+- Suggestions stored in `glossary_suggestions.json`
+- Logged in `anomalies_log.csv` (with count + proposed corrections)
+
+---
+
+## 🧠 Processing Pipeline
+
+Full flow via `process_transcript.py`:
+
+1. Combines lines by speaker
+2. Applies glossary corrections
+3. Detects unknown words
+4. Suggests glossary additions
+5. Exports:
+   - ✅ `.xlsx` with corrections and color highlights
+   - ✅ `.txt` and `.md` files with YAML headers
+   - ✅ `anomalies_log.csv`
+   - ✅ `glossary_suggestions.json`
+
+---
+
+## 🧼 Cleaner Sentences
+
+To change how speech is grouped (by pause length):
+
+Edit `convert_json_to_tsv.py` and update:
+
+```python
+MAX_PAUSE_SECONDS = 1.0
 ```
 
-
-##### **Add new players**:  
-Inside an existing campaign, just add another "handle": "Character" line.
-
-##### **Important**:
-
-- Don't leave a trailing comma after the last player.
-- Player handle must match the filename (minus the number before the hyphen).
+Try `0.8` for tighter grouping or `2.0` for looser grouping.
 
 ---
 
-#### **Change Output Folder**
+## 🧪 Troubleshooting
 
-By default, outputs go into:
-
-`[Audio Folder]\whisperx_output\`
-
-If you want a different location:
-- Open `batch_transcribe.bat`
-- Search for `output_root=`
-- Change the path logic there.
-
-Example to save always to `C:\Transcripts:`
-set `"output_root=C:\Transcripts"`
+| Problem              | Solution                                                  |
+|----------------------|-----------------------------------------------------------|
+| WhisperX fails       | Check Conda env and HuggingFace token                     |
+| Missing output       | Ensure filenames follow `###-handle_0.flac` format        |
+| Jumbled transcript   | Fix speaker mappings in `config.json`                     |
+| Permission errors    | Close files before running scripts                        |
+| Bad transcription    | Update WhisperX or refine `MAX_PAUSE_SECONDS`             |
 
 ---
 
-##### **Color Customization**
+## 🧙 Obsidian-Ready Output
 
-The Excel (`full_transcript.xlsx`) uses a rotating color palette to separate speakers visually.
+Final `.md` files are compatible with Obsidian and include:
 
-**To modify colors**:
-
-- Open `combine_tsvs_with_colors.py`
-- Find the `colors = [...]` list
-- Add, remove, or reorder colors.
+- YAML frontmatter (Campaign, Session Date, Players)
+- Auto-tag line (e.g., `#transcript #Waterdeep #session/2025-05-01`)
 
 ---
 
-##### **Troubleshooting**
+## 🧾 License & Credits
 
-| **Problem**        | **Solution**                                                  |
-| ------------------ | ------------------------------------------------------------- |
-| WhisperX fails     | Check HuggingFace Token, Conda environment                    |
-| Output missing     | Ensure filenames match patterns (e.g., numbers-handle_0.flac) |
-| Transcript jumbled | Fix missing speaker mapping in `config.json`                  |
-| Permission error   | Don't open files in Excel/Notepad while processing            |
-| Slips/missing text | Upgrade WhisperX if needed                                    |
+Built using [WhisperX](https://github.com/m-bain/whisperx).  
+Local enhancements by Brian Buchanan & contributors.  
+No license file included—assume personal/internal use only unless stated otherwise.
 
 ---
 
-##### **Cleaner Transcriptions**
+## 📣 Contributions
 
-This system groups words together based on **pauses** (default = 1 second).
+Feel free to fork, improve, or request features!
 
-If you want **longer** or **shorter** sentence groupings:
-
-- Open `convert_json_to_tsv.py`
-- Find `MAX_PAUSE_SECONDS`
-- Adjust value (e.g., `0.8` for tighter, `2.0` for longer).
+---

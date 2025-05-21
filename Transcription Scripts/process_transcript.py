@@ -10,7 +10,6 @@ import json
 import pandas as pd
 import difflib
 import re
-import logging
 from spellchecker import SpellChecker
 import Levenshtein
 import jellyfish
@@ -18,11 +17,10 @@ from collections import defaultdict, Counter
 from openpyxl import load_workbook
 from openpyxl.styles import PatternFill
 
-# === Logging and Constants ===
+# === Initial Configuration ===
 # Defines output file names and suffixes to strip when checking unknown words (e.g., "Tinkler's" → "Tinkler").
 # =============================
 
-LOG_FILE = "transcript_processing.log"
 ANOMALY_LOG_CSV = "anomalies_log.csv"
 SUGGESTIONS_FILE = "glossary_suggestions.json"
 GLOSSARY_FILE = "glossary_config.json"
@@ -31,9 +29,6 @@ SPEAKER_COLORS = [
     "FFFFCC", "CCFFCC", "CCE5FF", "FFCCCC", "FFCC99",
     "CCFFFF", "E0CCFF", "FFCCE5", "D9D9D9", "CCE5CC"
 ]
-
-# === Logging Setup ===
-logging.basicConfig(filename=LOG_FILE, level=logging.INFO, format="%(asctime)s - %(message)s")
 
 # === Glossary Loader ===
 # Reads glossary_config.json and extracts two sections:
@@ -56,17 +51,6 @@ def load_glossary(file_path):
     ignore_words = set(word.lower() for word in data.get("Ignore", []))
     return replace_dict, ignore_words
 
-
-# def load_glossary(file_path):
-    # if not os.path.exists(file_path):
-        # return {}, set()
-
-    # with open(file_path, "r", encoding="utf-8") as f:
-        # data = json.load(f)
-
-    # replacements = data.get("Replace", {})
-    # ignore_words = set(word.lower() for word in data.get("Ignore", []))
-    # return replacements, ignore_words
 
 # === Suffix Stripper ===
 # Strips common possessive or contraction suffixes from words.
@@ -146,37 +130,6 @@ def apply_corrections(text, replacements, applied_log):
 
     applied_log.append("; ".join(summary) if summary else "")
     return text
-
-# def apply_corrections(text, replacements, applied_log):
-    # summary = []
-
-    # if not all(isinstance(v, list) for v in replacements.values()):
-        # print("❗ ERROR: 'replacements' appears to include non-list values. Check your load_glossary usage.")
-        # print("Here’s what it looks like:", json.dumps(replacements, indent=2))
-        # return text  # Don't apply anything to avoid corruption
-
-    # for correct, wrongs in replacements.items():
-        # for wrong in wrongs:
-            # pattern = r"\b{}\b".format(re.escape(wrong))
-            # matches = list(re.finditer(pattern, text, flags=re.IGNORECASE))
-            # for match in matches:
-                # summary.append(f"{match.group(0)} → {correct}")
-            # text = re.sub(pattern, correct, text, flags=re.IGNORECASE)
-    # applied_log.append("; ".join(summary) if summary else "")
-    # return text
-
-
-# def apply_corrections(text, replacements, applied_log):
-    # summary = []
-    # for correct, wrongs in replacements.items():
-        # for wrong in wrongs:
-            # pattern = r"\b{}\b".format(re.escape(wrong))
-            # matches = list(re.finditer(pattern, text, flags=re.IGNORECASE))
-            # for match in matches:
-                # summary.append(f"{match.group(0)} → {correct}")
-            # text = re.sub(pattern, correct, text, flags=re.IGNORECASE)
-    # applied_log.append("; ".join(summary) if summary else "")
-    # return text
 
 # === Detect Anomalies ===
 # Flags unknown words that:
@@ -258,9 +211,13 @@ def save_suggestions_json(suggestions):
             f.write(f'  "{correct_term}": {json_list}{comma}\n')
         f.write("}\n")
 
-    print("\n📘 Suggested additions to glossary_config.json:")
-    for correct_term, wrong_list in flipped.items():
-        print(f'  "{correct_term}": {json.dumps(sorted(set(wrong_list)))},')
+# === Print Suggestions ===
+# Prints suggestions into the console - Uncomment snippet below if you want to enable this feature
+# =========================
+
+    # print("\n📘 Suggested additions to glossary_config.json:")
+    # for correct_term, wrong_list in flipped.items():
+        # print(f'  "{correct_term}": {json.dumps(sorted(set(wrong_list)))},')
 
 # === Export .txt and .md Files ===
 # Outputs a formatted transcript like:
@@ -307,15 +264,9 @@ def export_txt_md(df, campaign, session_date, output_base):
 def process_file(file_path):
     print(f"📂 Processing: {file_path}")
     df = pd.read_excel(file_path)
-    replacements, ignore_words = load_glossary(GLOSSARY_FILE)
-    spell = SpellChecker()
-
-    import re
 
     # Extract campaign name and session date from the filename
     base_name = os.path.splitext(os.path.basename(file_path))[0]
-
-    # Match date (YYYY-MM-DD)
     match = re.search(r'(\d{4}-\d{2}-\d{2})', base_name)
     if match:
         date = match.group(1)
@@ -323,11 +274,35 @@ def process_file(file_path):
     else:
         campaign = base_name
         date = "Unknown"
+
     print(f"📘 Campaign: {campaign}")
     print(f"📅 Session Date: {date}")
 
+    # === LOAD GLOSSARY (with campaign-specific logic) ===
+    try:
+        with open(GLOSSARY_FILE, "r", encoding="utf-8") as f:
+            glossary_data = json.load(f)
+    except Exception as e:
+        print(f"❌ Failed to load {GLOSSARY_FILE}: {e}")
+        return
+
+    global_replace = glossary_data.get("Replace", {}).get("Global", {})
+    campaign_replace = glossary_data.get("Replace", {}).get(campaign, {})
+    ignore_words = set(word.lower() for word in glossary_data.get("Ignore", []))
+
+    # Merge campaign-specific and global replacements
+    replacements = global_replace.copy()
+    for correct, wrongs in campaign_replace.items():
+        if correct in replacements:
+            replacements[correct] = sorted(set(replacements[correct] + wrongs))
+        else:
+            replacements[correct] = wrongs
+
+    spell = SpellChecker()
+
+    # === COMBINE LINES ===
     combined_df = combine_lines(df)
-    
+
     # Assign consistent colors per player
     players = sorted(combined_df["Player"].unique())
     player_color_map = {
@@ -335,12 +310,14 @@ def process_file(file_path):
         for i, player in enumerate(players)
     }
 
+    # === APPLY CORRECTIONS ===
     correction_log = []
     combined_df["Adjusted Line"] = combined_df["Adjusted Line"].apply(
         lambda txt: apply_corrections(txt, replacements, correction_log)
     )
     combined_df["Corrections"] = correction_log
 
+    # === ANOMALY DETECTION ===
     all_anomalies = []
     for text in combined_df["Adjusted Line"]:
         all_anomalies.extend(detect_anomalies(text, spell, replacements, ignore_words))
@@ -351,34 +328,28 @@ def process_file(file_path):
     save_anomaly_log(anomaly_counts, suggestions)
     save_suggestions_json(suggestions)
 
+    # === EXPORT ===
     output_base = os.path.splitext(file_path)[0] + "_corrected"
     xlsx_path = output_base + ".xlsx"
     combined_df[["Start", "End", "Player", "Adjusted Line", "Corrections"]].to_excel(xlsx_path, index=False)
 
-    # Open workbook and color the rows
+    # Apply color highlights to Excel rows
     wb = load_workbook(xlsx_path)
     ws = wb.active
-
     for row in range(2, ws.max_row + 1):
         player = ws[f"C{row}"].value
         color = player_color_map.get(player, "FFFFFF")
         fill = PatternFill(start_color=color, end_color=color, fill_type="solid")
         for col in "ABCDE":
             ws[f"{col}{row}"].fill = fill
-
     wb.save(xlsx_path)
 
-    #combined_df[["Start", "End", "Player", "Adjusted Line", "Corrections"]].to_excel(output_base + ".xlsx", index=False)
     export_txt_md(combined_df, campaign, date, output_base)
 
     print(f"\n✅ Saved corrected transcript files:")
     print(f"  - {output_base}.xlsx")
     print(f"  - {output_base}.txt")
     print(f"  - {output_base}.md")
-
-# === Command-line Entry Point ===
-# Lets you drag and drop the .xlsx file onto the script in Windows Explorer.
-# ================================
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:

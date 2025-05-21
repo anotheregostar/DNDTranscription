@@ -7,7 +7,7 @@ from openpyxl import Workbook
 from openpyxl.styles import PatternFill
 
 # # Settings
-# input_folder = "whisperx_output"
+# input_folder = "Transcripts"
 # output_xlsx = os.path.join(input_folder, "full_transcript.xlsx")
 # output_txt = os.path.join(input_folder, "full_transcript.txt")
 # CONFIG_FILE = "config.json"
